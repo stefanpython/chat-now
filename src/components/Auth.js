@@ -2,6 +2,7 @@ import { auth } from "../firebase-config";
 import { signInAnonymously } from "firebase/auth";
 import { useState } from "react";
 import Cookies from "universal-cookie";
+import "./Auth.css";
 const cookies = new Cookies();
 
 export const Auth = (props) => {
@@ -23,14 +24,20 @@ export const Auth = (props) => {
 
   return (
     <div className="auth">
-      <p>Enter username to log in</p>
-      <form onSubmit={signIn}>
+      <div className="welcome-container">
+        <h1>Welcome to Chat Now</h1>
+      </div>
+
+      <p>Enter username to continue</p>
+      <form className="login-form" onSubmit={signIn}>
         <input
           type="text"
-          placeholder="Type in username"
+          placeholder="Type in username..."
           onChange={(e) => setUsername(e.target.value)}
         />
-        <button type="submit">Log in</button>
+        <button className="login-button" type="submit">
+          Log in
+        </button>
       </form>
     </div>
   );

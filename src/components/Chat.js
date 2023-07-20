@@ -8,7 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
-import { format } from "date-fns";
+import "./Chat.css";
 
 export const Chat = (props) => {
   const { room } = props;
@@ -28,7 +28,8 @@ export const Chat = (props) => {
     });
 
     return () => unsuscribe();
-  }, [messagesRef, room]);
+    // eslint-disable-next-line
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,8 +56,7 @@ export const Chat = (props) => {
         {messages.map((message) => (
           <div className="message-content" key={message.id}>
             <span className="user">{message.user}: </span>
-            {message.text} *
-            {format(message.createdAt.toDate(), "HH:mm:ss / yyyy-MM-dd")}
+            {message.text}
           </div>
         ))}
       </div>

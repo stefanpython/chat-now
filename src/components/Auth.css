@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Courgette&family=Indie+Flower&family=KoHo&family=Rajdhani:wght@400;500&display=swap");
+
+body {
+  background-color: whitesmoke;
+}
+
+.auth {
+  margin-top: 70%;
+  border: 1px solid gainsboro;
+  padding: 60px 20px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 10px 15px 10px rgba(10, 16, 27, 0.226);
+}
+
+.auth p {
+  display: flex;
+  justify-content: center;
+  font-size: large;
+  font-family: "KoHo", sans-serif;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form input {
+  height: 27px;
+  border-radius: 5px;
+  border: 0.2px solid grey;
+}
+
+.login-button {
+  margin-top: 5px;
+  height: 30px;
+  font-size: large;
+  color: white;
+  background-color: steelblue;
+  border: none;
+  border-radius: 5px;
+}
+
+.login-button:hover {
+  transform: scale(0.98);
+  transition: 0.7s;
+}
+
+h1 {
+  color: rgb(250, 179, 91);
+  font-family: "Courgette", cursive;
+  text-shadow: 7px 12px 5px rgba(128, 83, 0, 0.322);
+}
