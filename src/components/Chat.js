@@ -8,6 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
+import { format } from "date-fns";
 
 export const Chat = (props) => {
   const { room } = props;
@@ -46,11 +47,20 @@ export const Chat = (props) => {
 
   return (
     <div className="chat-app">
-      <div>
+      <div className="header">
+        <h1>Welcome to: {room.toUpperCase()}</h1>
+      </div>
+
+      <div className="messages-container">
         {messages.map((message) => (
-          <h1> {message.text}</h1>
+          <div className="message-content" key={message.id}>
+            <span className="user">{message.user}: </span>
+            {message.text} *
+            {format(message.createdAt.toDate(), "HH:mm:ss / yyyy-MM-dd")}
+          </div>
         ))}
       </div>
+
       <form onSubmit={handleSubmit} className="new-message-form">
         <input
           className="new-message-input"
