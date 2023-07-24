@@ -6,9 +6,11 @@ import {
   onSnapshot,
   query,
   where,
+  orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 import "./Chat.css";
+import { format } from "date-fns";
 
 export const Chat = (props) => {
   const { room } = props;
@@ -18,7 +20,11 @@ export const Chat = (props) => {
   const messagesRef = collection(db, "messages");
 
   useEffect(() => {
-    const queryMessages = query(messagesRef, where("room", "==", room));
+    const queryMessages = query(
+      messagesRef,
+      where("room", "==", room),
+      orderBy("createdAt")
+    );
     const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
       let messages = [];
       snapshot.forEach((doc) => {
@@ -56,7 +62,10 @@ export const Chat = (props) => {
         {messages.map((message) => (
           <div className="message-content" key={message.id}>
             <span className="user">{message.user}: </span>
-            {message.text}
+            {message.text}*
+            {message.createdAt
+              ? `*${format(message.createdAt.toDate(), "yyyy-MM-dd HH:mm:ss")}`
+              : ""}
           </div>
         ))}
       </div>
