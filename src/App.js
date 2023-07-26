@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import "./App.css";
+import styles from "./App.module.css"; // Import the CSS module
 import { Auth } from "./components/Auth";
 import Cookies from "universal-cookie";
 import { Chat } from "./components/Chat";
@@ -21,28 +21,31 @@ function App() {
 
   if (!isAuth) {
     return (
-      <div className="App">
+      <div className={styles.app}>
         <Auth setIsAuth={setIsAuth} />
       </div>
     );
   }
   return (
-    <div className="room-container">
+    <div className={styles["room-container"]}>
       {room ? (
         <Chat room={room} />
       ) : (
-        <div className="room">
+        <div className={styles.room}>
           <label>Enter Room Name</label>
           <input ref={roomInputRef} />
-          <button onClick={() => setRoom(roomInputRef.current.value)}>
+          <button
+            className={styles["enter-chat-btn"]}
+            onClick={() => setRoom(roomInputRef.current.value)}
+          >
             Enter Chat
           </button>
+
+          <div className={styles["sign-out"]}>
+            <button onClick={signUserOut}>Sign Out</button>
+          </div>
         </div>
       )}
-
-      <div className="sign-out">
-        <button onClick={signUserOut}>Sign Out</button>
-      </div>
     </div>
   );
 }

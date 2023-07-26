@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Courgette&family=Indie+Flower&family=KoHo&family=Rajdhani:wght@400;500&display=swap");
+
+.room-container {
+  margin-top: 150px;
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.room label {
+  font-family: "KoHo", sans-serif;
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+
+.room input {
+  height: 25px;
+  width: 14.5em;
+}
+
+.enter-chat-btn {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  background-color: #5783db;
+  color: white;
+  font-size: 17px;
+  border-radius: 5px;
+}
+
+.sign-out {
+  display: flex;
+  justify-content: center;
+  margin-top: 25em;
+}
+
+.sign-out button {
+  background-color: #dd7973;
+  border: none;
+  color: white;
+  padding: 10px;
+  font-weight: 500;
+  border-radius: 5px;
+}

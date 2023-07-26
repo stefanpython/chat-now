@@ -17,6 +17,8 @@ export const Auth = (props) => {
       setIsAuth(true);
 
       auth.currentUser.displayName = username;
+
+      localStorage.setItem("username", username);
     } catch (err) {
       console.log(err);
     }

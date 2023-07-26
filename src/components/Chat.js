@@ -11,13 +11,30 @@ import {
 import { auth, db } from "../firebase-config";
 import "./Chat.css";
 import { format } from "date-fns";
+import { signOut } from "firebase/auth";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 export const Chat = (props) => {
   const { room } = props;
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  // eslint-disable-next-line
+  const [isAuth, setIsAuth] = useState(cookies.get("auth-token"));
+  const [username, setUserName] = useState("");
 
   const messagesRef = collection(db, "messages");
+
+  useEffect(() => {
+    // Check the authentication status
+    const authToken = cookies.get("auth-token");
+    setIsAuth(!!authToken);
+
+    // Retrieve the username from local storage after a page reload
+    const storedUsername = localStorage.getItem("username");
+    setUserName(storedUsername);
+  }, []);
 
   useEffect(() => {
     const queryMessages = query(
@@ -45,27 +62,44 @@ export const Chat = (props) => {
     await addDoc(messagesRef, {
       text: newMessage,
       createdAt: serverTimestamp(),
-      user: auth.currentUser.displayName,
+      user: username,
       room,
     });
 
     setNewMessage("");
   };
 
+  const signUserOut = async () => {
+    await signOut(auth);
+    cookies.remove("auth-token");
+    setIsAuth(false);
+
+    localStorage.removeItem("username");
+
+    window.location.reload();
+  };
+
   return (
     <div className="chat-app">
       <div className="header">
         <h1>Welcome to: {room.toUpperCase()}</h1>
+
+        <div className="sign-out">
+          <button onClick={signUserOut}>Sign Out</button>
+        </div>
       </div>
 
       <div className="messages-container">
         {messages.map((message) => (
           <div className="message-content" key={message.id}>
             <span className="user">{message.user}: </span>
-            {message.text}*
-            {message.createdAt
-              ? `*${format(message.createdAt.toDate(), "yyyy-MM-dd HH:mm:ss")}`
-              : ""}
+            <span className="message-text">{message.text} </span>
+            <span className="message-date">
+              - sent at: {""}
+              {message.createdAt
+                ? `${format(message.createdAt.toDate(), "HH:mm:ss dd-MM-yyyy")}`
+                : ""}
+            </span>
           </div>
         ))}
       </div>

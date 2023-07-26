@@ -5,12 +5,16 @@ body {
 }
 
 .auth {
-  margin-top: 70%;
   border: 1px solid gainsboro;
   padding: 60px 20px;
   border-radius: 20px;
   background-color: white;
   box-shadow: 10px 15px 10px rgba(10, 16, 27, 0.226);
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  margin: auto;
+  margin-top: 250px;
 }
 
 .auth p {
