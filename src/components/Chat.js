@@ -15,6 +15,7 @@ import { signOut } from "firebase/auth";
 import Cookies from "universal-cookie";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { uid } from "uid";
+import EmojiPicker from "emoji-picker-react";
 
 const cookies = new Cookies();
 
@@ -28,6 +29,10 @@ export const Chat = (props) => {
 
   // Image file upload
   const [selectedFile, setSelectedFile] = useState("");
+
+  // Emoji usage
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState("");
 
   const messagesRef = collection(db, "messages");
 
@@ -84,10 +89,12 @@ export const Chat = (props) => {
       user: username,
       room,
       imageUrl,
+      selectedEmoji,
     });
 
     setNewMessage("");
     setSelectedFile("");
+    setPickerVisible(false);
 
     e.target.reset();
   };
@@ -142,6 +149,24 @@ export const Chat = (props) => {
       </div>
 
       <form onSubmit={handleSubmit} className="new-message-form">
+        <button
+          className="emoji--button"
+          onClick={() => setPickerVisible(!pickerVisible)}
+        >
+          😊
+        </button>
+
+        {pickerVisible && (
+          <div className="emoji-picker-container">
+            <EmojiPicker
+              onEmojiClick={(emojiObject, event) => {
+                setNewMessage(newMessage + emojiObject.emoji);
+                setSelectedEmoji(emojiObject.emoji);
+              }}
+            />
+          </div>
+        )}
+
         <input
           className="new-message-input"
           placeholder="Type your message here..."

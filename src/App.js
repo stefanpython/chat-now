@@ -19,6 +19,12 @@ function App() {
     setIsAuth(false);
   };
 
+  const handleRoomEntry = (e) => {
+    if (e.key === "Enter") {
+      setRoom(roomInputRef.current.value);
+    }
+  };
+
   if (!isAuth) {
     return (
       <div className={styles.app}>
@@ -33,7 +39,7 @@ function App() {
       ) : (
         <div className={styles.room}>
           <label>Enter Room Name</label>
-          <input ref={roomInputRef} />
+          <input ref={roomInputRef} onKeyDown={handleRoomEntry} />
           <button
             className={styles["enter-chat-btn"]}
             onClick={() => setRoom(roomInputRef.current.value)}
