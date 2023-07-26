@@ -8,11 +8,13 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import { auth, db } from "../firebase-config";
+import { auth, db, storage } from "../firebase-config";
 import "./Chat.css";
 import { format } from "date-fns";
 import { signOut } from "firebase/auth";
 import Cookies from "universal-cookie";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { uid } from "uid";
 
 const cookies = new Cookies();
 
@@ -24,8 +26,17 @@ export const Chat = (props) => {
   const [isAuth, setIsAuth] = useState(cookies.get("auth-token"));
   const [username, setUserName] = useState("");
 
+  // Image file upload
+  const [selectedFile, setSelectedFile] = useState("");
+
   const messagesRef = collection(db, "messages");
 
+  const handleFileInputChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  // Save username to localStorage
   useEffect(() => {
     // Check the authentication status
     const authToken = cookies.get("auth-token");
@@ -57,18 +68,31 @@ export const Chat = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (newMessage === "") return;
+    if (newMessage === "" && !selectedFile) return;
+
+    // Upload the selected image to Firebase Storage
+    let imageUrl = null;
+    if (selectedFile) {
+      const storageRef = ref(storage, `images/${selectedFile.name + uid()}`);
+      await uploadBytes(storageRef, selectedFile);
+      imageUrl = await getDownloadURL(storageRef);
+    }
 
     await addDoc(messagesRef, {
       text: newMessage,
       createdAt: serverTimestamp(),
       user: username,
       room,
+      imageUrl,
     });
 
     setNewMessage("");
+    setSelectedFile("");
+
+    e.target.reset();
   };
 
+  // Sign out user
   const signUserOut = async () => {
     await signOut(auth);
     cookies.remove("auth-token");
@@ -100,6 +124,19 @@ export const Chat = (props) => {
                 ? `${format(message.createdAt.toDate(), "HH:mm:ss dd-MM-yyyy")}`
                 : ""}
             </span>
+
+            {message.imageUrl && (
+              <>
+                <br />
+                <img
+                  className="chat-image"
+                  src={message.imageUrl}
+                  alt="Uploaded"
+                  style={{ maxWidth: 300 }}
+                  onLoad={() => window.scrollTo(0, document.body.scrollHeight)}
+                />
+              </>
+            )}
           </div>
         ))}
       </div>
@@ -111,6 +148,14 @@ export const Chat = (props) => {
           onChange={(e) => setNewMessage(e.target.value)}
           value={newMessage}
         />
+
+        <input
+          id="file-input"
+          className="file-input"
+          type="file"
+          onChange={handleFileInputChange}
+        />
+
         <button type="submit" className="send-button">
           Send
         </button>
